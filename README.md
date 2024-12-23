@@ -130,12 +130,25 @@ With the what I'm working on sorted out, I start thinking through the problem st
 
 ### Design Details and Descisions
 
+Note that links to each library can be found in the [Resources](#resources) section at the bottom of this document.
+
 - This will be a single page application as there is no need for the complexity of a router. While I do plan to use query strings, additional routes are not necessary. See the (Future Enhancements)[#future-enhancements] section for how I might build this out further should the scope change.
+  - The general structure will be that of MVC:
+    - Each page (just one for this project) will have a directory under `src/`
+    - Within that directory, the primary component will be named index.tsx and will handle only visual logic and structure
+    - Other components used within the page will be split into two categories: general use and page-specific
+    - Page specific compoenetns will be placed in the same sub-directory of the `src/` folder as the page itself
+    - General purpose components will be placed in the `src/components` directory
 - The page will be written Typescript and React, specifically Vite. While React/Typescript was dictated in the assignment, it would also by my preference as a modern front-end framework
 - Tailwind will be used a for styling. It is a lightweight framework that is vastly used within the industry. As it is highly compressible and scales well, I feel that it is a solid option for building your own design language. Additionally, the Prettier plugin enables a consistent ordering of classes, which is helpful for code review. While CSS is an essential part of front end development, Tailwind - and it's CSS-like utility classes - allows for improved network performance while still demonstrating my ability and understanding of how styling works. Additionally, their color pallet is well thought through and provides good contrast and color-blind friendly options. The library would be installed and only provides styling, there is no security concern with the library. #TODO
-- Shadcn will be leveraged for the beginnings of a component library. This allows full control over the implementation details, ensures accessibility through Radix, and saves time on boilerplate components.
+  - By extension, Prettier will be used as a dev-dependency to ensure consistency in styling. This is an industry standard and is generally used in almost every company to ensure visual consistency between developers.
+- Shadcn will be leveraged for the beginnings of a component library. This allows full control over the implementation details, ensures accessibility through Radix, and saves time on boilerplate components. At Virtru, I imagine that a design system is already in place and that it would be leveraged; as such, creating my own does not provide much value. Instead, I should focus on the the larger functionality of the application.
+  - General purpose items will be placed in the `src/components` directory, not only for shadcn items but also hand-made components. Any item that is pulled by Shadcn will be designated as such via a comment in that component
+- Lucide React icons will be used for iconography. By similar logic to Shadcn, this industry standard is used in place of a design system and acts as a building block. It allows single-item imports via tree-shaking and is ultimiately just a SVG image; therefore, it is very performant and provides a good developer and user experience.
 - Vitest and React Testing Library will be used for testing. Vitest is a modern testing library that replaces Jest and provides Typescript support out of the box. This is a testing dependency so is not exposed to users. GitHub actions would be a solid testing solution as well; however, I feel that it is out of scope for this project. The aim is to show my ability to code a front-end application. Additionally, most CI/CD work is set up early in the process of development so I do not anticiate needing to do much CI/CD work for Virtru. As such, I see little value in setting it up for this project.
+  - All test will be placed in the `__tests__/` directory, the structure of which will mirror the `src/` directory for ease of navigation and review.
 - A custom `useFetch` hook will be created for the fetch that covers the following:
+  - The custom hook will be placed in the `src/hooks` directory
   - Fetch from a given URL
   - Leverage AbortControllers to invalidate as necessary
   - An AbortController will be used to ensure no memory leaks and proper cleanup
@@ -180,6 +193,7 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
   - My initial thought would be to leverage React 19's actions for securly running the fetch calls on the server; however, in review of the package.json, it seems we're not on a version that would support this. Additionally, running this on a server is likely overkill as the state does not contain any sensitive information.
   - The primary library I am considering using is Tailwind just for the ease and consistency of styling. Fetch, date, and query string are more than sufficient for this application and are native. If i were to build this out, I would consider using TanStack Query, which would offer a more robust fetching solution but this could be excessive for this project.
   - Additionally, Shadcd will be used as a component library. As the code is created in the project, this acts effectively as a non-dependency and is rather a semi-opinionated springboard for development of common components. As such, I would not consider this a security risk.
+  - Lucide React Icons is well understood to be safe and is updated consistenty by the community. At time of writing, the last update was 15 hours ago, meaning the package is actively maintained and unlikely to contain security issues.
 - [x] **Secure Database Access**
   - This is not applicable as the application has no database
   - RBAC would be interesting to consider, especially for hiding/showing statuses based on role, but I feel that such considerations fall outside of the scope of this challenge.
@@ -219,3 +233,19 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
 ### Resources
 
 - OWASP [web app checklist](https://owasp.org/www-project-developer-guide/draft/design/web_app_checklist/)
+- [Virtru](https://www.virtru.com/) for the favicon and inspiration around branding
+- [v0](https://v0.dev) for inspiration: see the specific prompt and generated page here: [https://v0.dev/chat/0mB1qmJ0Syt](https://v0.dev/chat/0mB1qmJ0Syt)
+- [Tailwind](https://tailwindcss.com/)
+- [Vitest](https://vitest.dev/) documentation for testing
+- [Shadcn](https://ui.shadcn.com/) for building-block components
+
+# Usage
+To run in development, ensure the backend is running and then run
+```sh
+npm run dev
+```
+
+To run in production, run
+```sh
+npm run build
+npm run start
