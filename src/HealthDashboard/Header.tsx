@@ -15,17 +15,17 @@ function Header({ pause, resume, paused }: Props) {
         <Button
           variant="secondary"
           className="px-2 text-primary-500 hover:text-primary-950"
-        >
-          <Filter />
-          <span className="-ml-1 hidden sm:inline-block">Filter</span>
-        </Button>
-        <Button
-          variant="secondary"
-          className="px-2 text-primary-500 hover:text-primary-950"
           onClick={action}
         >
           {Icon}
           <span className="-ml-1 hidden sm:inline-block">{buttonText}</span>
+        </Button>
+        <Button
+          variant="secondary"
+          className="px-2 text-primary-500 hover:text-primary-950"
+        >
+          <Filter />
+          <span className="-ml-1 hidden sm:inline-block">Filter</span>
         </Button>
       </nav>
     </header>
