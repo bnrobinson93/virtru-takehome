@@ -236,6 +236,7 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
 - [Virtru](https://www.virtru.com/) for the favicon and inspiration around branding
 - [v0](https://v0.dev) for inspiration: see the specific prompt and generated page here: [https://v0.dev/chat/0mB1qmJ0Syt](https://v0.dev/chat/0mB1qmJ0Syt)
 - [Tailwind](https://tailwindcss.com/)
+- [Color pallet generator for Tailwind](https://javisperez.github.io/tailwindcolorshades/?bunting=001E4A)
 - [Vitest](https://vitest.dev/) documentation for testing
 - [Shadcn](https://ui.shadcn.com/) for building-block components
 
