@@ -1,4 +1,4 @@
-type Status = "healthy" | "unhealthy";
+type Status = "healthy" | "unhealthy" | "unreachable" | "pending";
 
 type ServiceStatus = {
   status: Status;
@@ -7,7 +7,9 @@ type ServiceStatus = {
 
 type ServicesHealth = {
   status: Status;
-  components: ServiceStatus[];
+  components: {
+    [key in T]: ServiceStatus;
+  };
 };
 
 type UseFetchReturn = {

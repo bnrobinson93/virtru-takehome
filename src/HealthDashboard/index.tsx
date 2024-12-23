@@ -13,12 +13,17 @@ function HealthDashboard() {
   return (
     <div
       className={cn(
-        "grid-rows-[auto 1fr auto] grid min-h-dvh bg-gray-50 font-sans antialiased dark:bg-gray-900 dark:text-white",
+        "grid-rows-[auto 1fr auto] grid min-h-dvh bg-white font-sans antialiased dark:bg-gray-950 dark:text-white",
       )}
     >
       <Header pause={pause} resume={resume} paused={paused} />
-      <main>
-        <ServiceMonitor data={data} error={error} loading={loading} />
+      <main className="mx-auto w-full max-w-4xl space-y-8">
+        <ServiceMonitor
+          data={data}
+          error={error}
+          loading={loading}
+          paused={paused}
+        />
       </main>
       <Footer />
     </div>

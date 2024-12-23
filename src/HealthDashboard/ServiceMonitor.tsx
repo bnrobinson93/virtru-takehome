@@ -1,28 +1,23 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import StatusContext from "@/contexts/Statuses";
 import DateTime from "./DateTime";
 import HiddenItems from "./HiddenItems";
 import ItemizedStatus from "./ItemizedStatus";
 import OverallStatus from "./OverallStatus";
 
-const StatusContext = createContext<{
-  currentStatuses: ServicesHealth | null;
-  previousStatuses: ServicesHealth | null;
-  hiddenItems: ServiceStatus[] | null;
-  oldTimestamp: number;
-} | null>(null);
-
 type Props = {
   data: ServicesHealth | null;
   error: string | null;
   loading: boolean;
+  paused: boolean;
 };
 
-function ServiceMonitor({ data, error, loading }: Props) {
-  const [currentStatuses, setCurrentStatuses] = useState<ServicesHealth | null>(
+function ServiceMonitor({ data, error: err, loading, paused }: Props) {
+  const [error, setError] = useState<string>("");
+  const [currentStatus, setCurrentStatus] = useState(data);
+  const [previousStatus, setPreviousStatus] = useState<ServicesHealth | null>(
     null,
   );
-  const [previousStatuses, setPreviousStatuses] =
-    useState<ServicesHealth | null>(null);
   const [hiddenItems, setHiddenItems] = useState<ServiceStatus[]>([]);
   const [oldTimestamp, setOldTimestamp] = useState<number>(Date.now());
 
@@ -37,9 +32,22 @@ function ServiceMonitor({ data, error, loading }: Props) {
     console.log("Found a query string", searchParams);
   }, [searchParams]);
 
+  useEffect(() => {
+    if (err) return setError(err);
+    setError("");
+    setPreviousStatus(currentStatus);
+    setCurrentStatus(data);
+  }, [data, err, currentStatus]);
+
   return (
     <StatusContext.Provider
-      value={{ currentStatuses, previousStatuses, hiddenItems, oldTimestamp }}
+      value={{
+        currentStatus: currentStatus,
+        previousStatus: previousStatus,
+        hiddenItems,
+        oldTimestamp,
+        paused,
+      }}
     >
       <OverallStatus />
       <ItemizedStatus />
