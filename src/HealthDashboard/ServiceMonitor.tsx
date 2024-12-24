@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import StatusContext from "@/contexts/Statuses";
 import DateTime from "./DateTime";
-import HiddenItems from "./HiddenItems";
-import ItemizedStatus from "./ItemizedStatus";
 import OverallStatus from "./OverallStatus";
+import ItemizedStatus from "./ItemizedStatus";
+import HiddenItems from "./HiddenItems";
 
 type Props = {
   data: ServicesHealth | null;
@@ -49,10 +49,12 @@ function ServiceMonitor({ data, error: err, loading, paused }: Props) {
         paused,
       }}
     >
-      <OverallStatus />
-      <ItemizedStatus />
-      <HiddenItems />
-      <DateTime />
+      <div className="flex flex-col justify-between space-y-4">
+        <DateTime />
+        <OverallStatus />
+        <ItemizedStatus />
+        <HiddenItems />
+      </div>
     </StatusContext.Provider>
   );
 }

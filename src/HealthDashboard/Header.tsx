@@ -9,7 +9,7 @@ function Header({ pause, resume, paused }: Props) {
   const Icon = paused ? <Play size={24} /> : <Pause size={24} />;
 
   return (
-    <header className="top-0 flex h-14 items-center justify-between gap-2 bg-gray-400 px-4 py-2 dark:bg-gray-600">
+    <header className="top-0 mb-4 flex h-14 items-center justify-between gap-2 bg-gray-400 px-4 py-2 dark:bg-gray-600">
       <div className="text-3xl font-bold">Health Check</div>
       <nav>
         <Button

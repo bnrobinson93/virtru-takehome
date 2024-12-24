@@ -9,4 +9,15 @@ const statusColor = (status: Status) => {
   }
 };
 
-export { statusColor };
+const statusColorBg = (status: Status) => {
+  switch (status) {
+    case "healthy":
+      return "bg-green-500";
+    case "unhealthy":
+      return "bg-red-500";
+    default:
+      return "bg-gray-500";
+  }
+};
+
+export { statusColor, statusColorBg };

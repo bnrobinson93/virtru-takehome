@@ -29,7 +29,7 @@ function DisplayOverallStatus({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg bg-gray-50 p-6 shadow dark:bg-gray-900">
+    <section className="flex items-center justify-between rounded-lg bg-gray-50 p-6 shadow dark:bg-gray-900">
       <h1 className="text-2xl font-bold">Current Status</h1>
       {highlight && (
         <div
@@ -48,7 +48,7 @@ function DisplayOverallStatus({
           {status}
         </span>
       </div>
-    </div>
+    </section>
   );
 }
 
