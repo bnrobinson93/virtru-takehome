@@ -1,4 +1,4 @@
-# Virtru Take-home Challenge for Frontend Engineers
+# Virtru Take-home Challenge for FrontendeEngineers
 
 ## Assignment
 
@@ -139,6 +139,7 @@ Note that links to each library can be found in the [Resources](#resources) sect
     - Other components used within the page will be split into two categories: general use and page-specific
     - Page specific compoenetns will be placed in the same sub-directory of the `src/` folder as the page itself
     - General purpose components will be placed in the `src/components` directory
+  - Since each component will need access to the fetch results, context will be leveraged
 - The page will be written Typescript and React, specifically Vite. While React/Typescript was dictated in the assignment, it would also by my preference as a modern front-end framework
 - Tailwind will be used a for styling. It is a lightweight framework that is vastly used within the industry. As it is highly compressible and scales well, I feel that it is a solid option for building your own design language. Additionally, the Prettier plugin enables a consistent ordering of classes, which is helpful for code review. While CSS is an essential part of front end development, Tailwind - and it's CSS-like utility classes - allows for improved network performance while still demonstrating my ability and understanding of how styling works. Additionally, their color pallet is well thought through and provides good contrast and color-blind friendly options. The library would be installed and only provides styling, there is no security concern with the library. #TODO
   - By extension, Prettier will be used as a dev-dependency to ensure consistency in styling. This is an industry standard and is generally used in almost every company to ensure visual consistency between developers.
@@ -229,6 +230,8 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
 - Encryption or compression, or JWT, for query strings for enhanced security
 - Keyboard shortcuts
 - More robust edge case handling, namely large changes in the fetch response
+- Leverage redux or a similar state management library in place of context
+- Animations
 
 ### Resources
 
@@ -241,12 +244,16 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
 - [Shadcn](https://ui.shadcn.com/) for building-block components
 
 # Usage
+
 To run in development, ensure the backend is running and then run
+
 ```sh
 npm run dev
 ```
 
 To run in production, run
+
 ```sh
 npm run build
 npm run start
+```
