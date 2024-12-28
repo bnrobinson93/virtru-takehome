@@ -46,7 +46,12 @@ function HiddenItems() {
       onOpenChange={setIsOpen}
       className="relative rounded-lg bg-gray-400 p-6 shadow outline-dashed outline-2 outline-gray-500 dark:bg-gray-600"
     >
-      <div className="absolute right-12 top-6 z-10 flex items-center">
+      <div
+        className={cn("absolute right-12 top-6 z-10 items-center", {
+          flex: !showRestoreButton,
+          hidden: showRestoreButton,
+        })}
+      >
         {showRestoreButton ? (
           <Button
             variant="link"
@@ -60,7 +65,7 @@ function HiddenItems() {
             <div
               className={cn(
                 "-mr-1 hidden h-3 w-3 animate-spin rounded-full border-b-2 border-primary-300",
-                isResetting && "block",
+                { block: isResetting },
               )}
             />
             <Button

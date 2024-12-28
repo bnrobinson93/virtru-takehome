@@ -54,7 +54,7 @@ function DisplayStatuses({ statuses, startMaximixed }: Props) {
         variant="link"
         className={cn(
           "absolute right-12 top-6 z-10 hidden items-center text-primary-300 dark:text-primary-700",
-          showHideButton && "block",
+          { block: showHideButton },
         )}
         onClick={hideChecked}
       >
@@ -69,22 +69,26 @@ function DisplayStatuses({ statuses, startMaximixed }: Props) {
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <ul className="divide-y divide-gray-500">
-          {Object.keys(statuses).map((serviceName) => {
-            const serviceDetails = statuses[serviceName];
-            const { status } = serviceDetails;
+        <>
+          <p className="text-sm text-gray-800">
+            Hover an item to view a more detailed status.
+          </p>
+          <ul className="divide-y divide-gray-500">
+            {Object.keys(statuses).map((serviceName) => {
+              const serviceDetails = statuses[serviceName];
 
-            return (
-              <ListItem
-                key={serviceName}
-                serviceName={serviceName}
-                status={status}
-                checked={checked}
-                setChecked={setChecked}
-              />
-            );
-          })}
-        </ul>
+              return (
+                <ListItem
+                  key={serviceName}
+                  serviceName={serviceName}
+                  status={serviceDetails}
+                  checked={checked}
+                  setChecked={setChecked}
+                />
+              );
+            })}
+          </ul>
+        </>
       </CollapsibleContent>
     </Collapsible>
   );

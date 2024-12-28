@@ -25,7 +25,7 @@ function ListItem({ serviceName, status, checked, setChecked }: Props) {
     <li key={serviceName} className="flex justify-between">
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <div className="flex items-center space-x-4">
               <Checkbox
                 id={serviceName}

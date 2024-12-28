@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DisplayStatuses from "../../src/HealthDashboard/ItemizedStatus/DisplayStatuses";
+import StatusContext from "@/contexts/Statuses";
 
 // NOTE: These could be added to global config but it doesn't play nicely with nvim
 import "@testing-library/jest-dom/vitest";
-import { it, expect, describe } from "vitest";
+import { it, expect, describe, vi } from "vitest";
 
 const user = userEvent.setup();
 
@@ -41,33 +42,38 @@ describe("Itemized Services", () => {
   it("shows the proper status", async () => {
     render(
       <DisplayStatuses
+        startMaximixed="true"
         statuses={{
-          test: { status: "healthy", message: "" },
+          test: { status: "healthy", message: "message" },
         }}
       />,
     );
-
-    const collapse = screen.getByRole("button", { name: "" });
-    await user.click(collapse);
-    const service = screen.getByText(/test/i);
-
+    const service = screen.getByRole("checkbox", { name: /Test/i });
     expect(service).toBeInTheDocument();
   });
 
+  // TODO: This should probably be an integration test, since it requires context.
+  // However, I wanted something to at least mock it out
   it("should allow the hiding of items", async () => {
+    const updateHiddenItems = vi.fn();
+    const contextValue = { updateHiddenItems };
+
     render(
-      <DisplayStatuses
-        startMaximixed="true"
-        statuses={{
-          test: { status: "healthy", message: "" },
-        }}
-      />,
+      <StatusContext.Provider value={contextValue}>
+        <StatusContext.Provider value={{ updateHiddenItems }}>
+          <DisplayStatuses
+            startMaximixed="true"
+            statuses={{
+              test: { status: "healthy", message: "message" },
+            }}
+          />
+        </StatusContext.Provider>
+      </StatusContext.Provider>,
     );
 
-    const hideButton = screen.getByRole("button", { name: /Hide/i });
+    const hideButton = screen.getByRole("button", { name: "Hide" });
     await user.click(hideButton);
 
-    const service = screen.queryByText(/test/i);
-    expect(service).not.toBeInTheDocument();
+    expect(updateHiddenItems).toHaveBeenCalledWith(["test"], "add");
   });
 });
