@@ -8,7 +8,7 @@ const StatusContext = createContext<{
     newComponents: string[],
     action: "add" | "remove",
   ) => void;
-  oldTimestamp: number;
+  timestamp: string;
   paused: boolean;
 } | null>(null);
 

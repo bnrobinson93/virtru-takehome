@@ -1,14 +1,16 @@
-import { useContext } from "react";
-import StatusContext from "@/contexts/Statuses";
+type Props = { timestamp?: string };
 
-function DateTime() {
-  const context = useContext(StatusContext);
-
+function DateTime({ timestamp }: Props) {
   let now = new Date();
-  if (context) now = new Date(context.oldTimestamp);
+  if (timestamp) now = new Date(timestamp);
 
   const displayTime = `${now.toDateString()} ${now.toLocaleTimeString()}`;
-  return <div className="self-end text-xs">Refresh time: {displayTime}</div>;
+  return (
+    <div className="self-end text-xs">
+      <span className="font-bold">Refresh time: </span>
+      {displayTime}
+    </div>
+  );
 }
 
 export default DateTime;
