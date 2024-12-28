@@ -1,17 +1,17 @@
-import { createContext } from "react";
 import { render, screen } from "@testing-library/react";
 import OverallStatus from "../../src/HealthDashboard/OverallStatus";
 import StatusContext from "../../src/contexts/Statuses";
 
 // NOTE: These could be added to global config but it doesn't play nicely with nvim
 import "@testing-library/jest-dom/vitest";
-import { it, expect, describe } from "vitest";
+import { it, expect, describe, vi } from "vitest";
 
-let currentStatus = null;
-let previousStatus = null;
-let hiddenItems = [] as ServiceStatus[];
-let oldTimestamp = Date.now();
-let paused = false;
+let currentStatus: ServicesHealth | null = null;
+let previousStatus: ServicesHealth | null = null;
+const hiddenItems: Components = {};
+const timestamp = new Date().toISOString();
+const paused = false;
+const updateHiddenItems = vi.fn();
 
 describe("Overall Status", () => {
   it("shows a loading state when doing initial fetch", () => {
@@ -21,7 +21,8 @@ describe("Overall Status", () => {
           currentStatus,
           previousStatus,
           hiddenItems,
-          oldTimestamp,
+          updateHiddenItems,
+          timestamp,
           paused,
         }}
       >
@@ -46,7 +47,8 @@ describe("Overall Status", () => {
           currentStatus,
           previousStatus,
           hiddenItems,
-          oldTimestamp,
+          updateHiddenItems,
+          timestamp,
           paused,
         }}
       >
@@ -75,7 +77,8 @@ describe("Overall Status", () => {
           currentStatus,
           previousStatus,
           hiddenItems,
-          oldTimestamp,
+          updateHiddenItems,
+          timestamp,
           paused,
         }}
       >

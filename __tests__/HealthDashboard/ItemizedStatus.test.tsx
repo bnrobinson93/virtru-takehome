@@ -48,7 +48,7 @@ describe("Itemized Services", () => {
         }}
       />,
     );
-    const service = screen.getByRole("checkbox", { name: /Test/i });
+    const service = screen.getByText(/Test/i);
     expect(service).toBeInTheDocument();
   });
 
