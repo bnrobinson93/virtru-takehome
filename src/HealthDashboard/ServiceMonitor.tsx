@@ -82,17 +82,17 @@ function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
     }
 
     logger(`Removing ${serviceNames}`);
+
+    const newHiddenItems = hiddenItems;
     serviceNames.map((serviceName) => {
       if (hiddenItems[serviceName] === undefined) return;
-
-      setHiddenItems((old) => {
-        const newState = old;
-        delete newState[serviceName];
-        const keys = Object.keys(newState);
-        localStorage.setItem("HIDDEN_ITEMS", JSON.stringify(keys));
-        return newState;
-      });
+      delete newHiddenItems[serviceName];
     });
+
+    const keys = Object.keys(newHiddenItems);
+    localStorage.setItem("HIDDEN_ITEMS", JSON.stringify(keys));
+
+    setHiddenItems(newHiddenItems);
   };
 
   const updateHiddenItems = (
