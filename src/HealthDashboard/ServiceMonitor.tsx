@@ -26,27 +26,19 @@ type Props = {
   error: string | null;
   loading: boolean;
   paused: boolean;
+  timestamp: string;
 };
 
-function ServiceMonitor({ data, error: err, loading, paused }: Props) {
+function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
   const [error, setError] = useState<string>("");
-  const [oldTimestamp, setOldTimestamp] = useState<number>(Date.now());
+  const [time, setTime] = useState(timestamp);
   const [currentStatus, setCurrentStatus] = useState(data);
   const [previousStatus, setPreviousStatus] = useState<ServicesHealth | null>(
     null,
   );
   const [hiddenItems, setHiddenItems] = useState<Components>({});
 
-  // Prevent rerender loop since this runs before the useEffect
-  const searchParams = useMemo(
-    () => new URLSearchParams(window.location.search),
-    [],
-  );
-
-  useEffect(() => {
-    if (searchParams.size === 0) return;
-    console.log("Found a query string", searchParams);
-  }, [searchParams]);
+  useEffect(() => setTime(timestamp), [timestamp]);
 
   // Using layout effect to avoid a hidden items section from popping in late
   useLayoutEffect(() => setHiddenItems(readHiddenItems()), []);
@@ -56,7 +48,6 @@ function ServiceMonitor({ data, error: err, loading, paused }: Props) {
     setError("");
     setPreviousStatus(currentStatus);
     setCurrentStatus(data);
-    setOldTimestamp(Date.now());
   }, [data, err, currentStatus]);
 
   const filteredData = useMemo(
@@ -112,6 +103,8 @@ function ServiceMonitor({ data, error: err, loading, paused }: Props) {
     if (action === "remove") removeHiddenItem(serviceNames);
   };
 
+  const displayTime = paused ? timestamp : time;
+
   return (
     <StatusContext.Provider
       value={{
@@ -119,12 +112,12 @@ function ServiceMonitor({ data, error: err, loading, paused }: Props) {
         previousStatus: previousStatus,
         hiddenItems,
         updateHiddenItems,
-        oldTimestamp,
+        timestamp: displayTime,
         paused,
       }}
     >
       <div className="mb-4 flex flex-col justify-between space-y-4">
-        <DateTime />
+        <DateTime timestamp={displayTime} />
         <OverallStatus />
         <ItemizedStatus />
         <HiddenItems />

@@ -15,7 +15,7 @@ type Props = {
   serviceName: string;
   status: ServiceStatus;
   checked: { [K in string]: boolean };
-  setChecked: React.Dispatch<React.SetStateAction<{ [K in string]: boolean }>>;
+  setChecked?: React.Dispatch<React.SetStateAction<{ [K in string]: boolean }>>;
 };
 
 function ListItem({ serviceName, status, checked, setChecked }: Props) {
@@ -27,17 +27,25 @@ function ListItem({ serviceName, status, checked, setChecked }: Props) {
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="flex items-center space-x-4">
-              <Checkbox
-                id={serviceName}
-                checked={checked[serviceName]}
-                onCheckedChange={(checkedVal) =>
-                  setChecked((old) => ({ ...old, [serviceName]: !!checkedVal }))
-                }
-              />
+              {setChecked && (
+                <Checkbox
+                  id={serviceName}
+                  checked={checked[serviceName]}
+                  onCheckedChange={(checkedVal) =>
+                    setChecked((old) => ({
+                      ...old,
+                      [serviceName]: !!checkedVal,
+                    }))
+                  }
+                />
+              )}
               <span className={cn("h-3 w-3 rounded-full", color)}>
                 <span className="sr-only">{status.status}</span>
               </span>
-              <label htmlFor={serviceName} className="first-letter:uppercase">
+              <label
+                htmlFor={serviceName}
+                className="cursor-pointer first-letter:uppercase"
+              >
                 {serviceName}
               </label>
             </div>
