@@ -6,6 +6,8 @@ import DisplayStatuses from "../../src/HealthDashboard/ItemizedStatus/DisplaySta
 import "@testing-library/jest-dom/vitest";
 import { it, expect, describe } from "vitest";
 
+const user = userEvent.setup();
+
 describe("Itemized Services", () => {
   it("should be minimized by default", () => {
     render(
@@ -45,11 +47,27 @@ describe("Itemized Services", () => {
       />,
     );
 
-    const collapse = screen.getByRole("button");
-    const user = userEvent.setup();
+    const collapse = screen.getByRole("button", { name: "" });
     await user.click(collapse);
     const service = screen.getByText(/test/i);
 
     expect(service).toBeInTheDocument();
+  });
+
+  it("should allow the hiding of items", async () => {
+    render(
+      <DisplayStatuses
+        startMaximixed="true"
+        statuses={{
+          test: { status: "healthy", message: "" },
+        }}
+      />,
+    );
+
+    const hideButton = screen.getByRole("button", { name: /Hide/i });
+    await user.click(hideButton);
+
+    const service = screen.queryByText(/test/i);
+    expect(service).not.toBeInTheDocument();
   });
 });

@@ -6,7 +6,7 @@ function ItemizedStatus() {
   const context = useContext(StatusContext);
 
   if (!context || context.currentStatus === null) {
-    return <DisplayStatuses statuses={[]} />;
+    return <DisplayStatuses />;
   }
 
   const { currentStatus, previousStatus } = context;
@@ -15,10 +15,9 @@ function ItemizedStatus() {
     return <DisplayStatuses statuses={currentStatus.components} />;
   }
 
-  const startMaximixed = localStorage.getItem("START_SERVICES_MAXIMIZED") as
-    | "true"
-    | "false"
-    | undefined;
+  const startMaximixed = localStorage.getItem(
+    "START_SERVICES_MAXIMIZED",
+  ) as MinimizedValues;
 
   return (
     <DisplayStatuses

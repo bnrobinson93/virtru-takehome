@@ -5,11 +5,13 @@ type ServiceStatus = {
   message: string;
 };
 
+type Components = {
+  [key in T]: ServiceStatus;
+};
+
 type ServicesHealth = {
   status: Status;
-  components: {
-    [key in T]: ServiceStatus;
-  };
+  components: Components;
 };
 
 type UseFetchReturn = {
@@ -21,3 +23,5 @@ type UseFetchReturn = {
   pause: () => void;
   resume: () => void;
 };
+
+type MinimizedValues = "true" | "false" | undefined;

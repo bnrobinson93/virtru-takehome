@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { useContext, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import logger from "@/lib/logger";
 import { statusColorBg } from "@/lib/statusColor";
 import { cn } from "@/lib/utils";
-import HideItem from "./HideItem";
+import { Button } from "@/components/ui/button";
+import StatusContext from "@/contexts/Statuses";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Share2 } from "lucide-react";
-import { useState } from "react";
 
 type Props = {
   serviceName: string;
@@ -14,7 +15,25 @@ type Props = {
 };
 
 function ListItem({ serviceName, status, checked, setChecked }: Props) {
+  const context = useContext(StatusContext);
   const color = statusColorBg(status);
+  const [removing, setRemoving] = useState(false);
+
+  const handleClick = () => {
+    if (!context)
+      return toast({
+        title: "Unable to restore item to normal view",
+        description: "Please try again later",
+      });
+
+    logger(`Restoring ${serviceName}`);
+    setRemoving(true);
+
+    const { updateHiddenItems } = context;
+    updateHiddenItems([serviceName], "remove");
+
+    setRemoving(false);
+  };
 
   return (
     <li key={serviceName} className="flex items-center justify-between p-2">
@@ -37,12 +56,21 @@ function ListItem({ serviceName, status, checked, setChecked }: Props) {
         </span>
       </div>
 
-      <span className="flex gap-1">
-        <Button variant="link" className="font-semibold text-primary-300">
-          <Share2 />
-          Share
+      <span className="flex items-center">
+        <span
+          className={cn(
+            "hidden h-4 w-4 animate-spin rounded-full border-b-4 border-primary-300",
+            removing && "block",
+          )}
+        />
+        <Button
+          variant="link"
+          className="text-gray-800"
+          onClick={handleClick}
+          disabled={removing}
+        >
+          Restore
         </Button>
-        <HideItem serviceName={serviceName} />
       </span>
     </li>
   );
