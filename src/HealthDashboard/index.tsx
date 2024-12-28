@@ -14,7 +14,7 @@ function HealthDashboard() {
   return (
     <div
       className={cn(
-        "grid min-h-dvh grid-rows-[auto,1fr,auto] bg-white font-sans antialiased dark:bg-gray-950 dark:text-white",
+        "grid min-h-dvh grid-rows-[auto,auto,1fr,auto] bg-white font-sans antialiased dark:bg-gray-950 dark:text-white",
       )}
     >
       <Toaster />
