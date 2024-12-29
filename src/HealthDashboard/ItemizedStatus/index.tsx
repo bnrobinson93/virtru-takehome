@@ -1,13 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import DisplayStatuses from "./DisplayStatuses";
 import StatusContext from "@/contexts/Statuses";
 import { toast } from "@/hooks/use-toast";
 
 type Props = { filterBy: string; forceMaximized?: boolean };
 
-function ItemizedStatus({ filterBy, forceMaximized = false }: Props) {
+function ItemizedStatus({ filterBy, forceMaximized }: Props) {
   const context = useContext(StatusContext);
   const [checked, setChecked] = useState<{ [K in string]: boolean }>({});
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useLayoutEffect(() => {
+    if (forceMaximized === true) return setIsMaximized(true);
+    const stored = localStorage.getItem("START_SERVICES_MAXIMIZED");
+    if (stored === null) return setIsMaximized(false);
+    setIsMaximized(stored === "true");
+  }, [forceMaximized]);
 
   if (!context || context.currentStatus === null) {
     return <DisplayStatuses />;
@@ -15,10 +23,6 @@ function ItemizedStatus({ filterBy, forceMaximized = false }: Props) {
 
   const { currentStatus, previousStatus, updateHiddenItems, timestamp } =
     context;
-
-  const startMaximized = forceMaximized
-    ? String(forceMaximized)
-    : (localStorage.getItem("START_SERVICES_MAXIMIZED") as MinimizedValues);
 
   const hideChecked = () => {
     updateHiddenItems(Object.keys(checked), "add");
@@ -80,7 +84,7 @@ function ItemizedStatus({ filterBy, forceMaximized = false }: Props) {
       shareChecked={shareChecked}
       hideChecked={hideChecked}
       shareItem={shareSingleItem}
-      startMaximized={startMaximized}
+      startMaximized={isMaximized}
       statuses={currentStatus.components}
       prevStatuses={previousStatus ? previousStatus.data.components : undefined}
       timestamp={timestamp}

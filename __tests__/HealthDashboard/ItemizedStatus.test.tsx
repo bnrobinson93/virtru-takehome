@@ -29,7 +29,7 @@ describe("Itemized Services", () => {
   it("should respect user preferences", () => {
     render(
       <DisplayStatuses
-        startMaximixed="true"
+        startMaximized
         statuses={{
           test: { status: "healthy", message: "" },
         }}
@@ -44,7 +44,7 @@ describe("Itemized Services", () => {
   it("shows the proper status", async () => {
     render(
       <DisplayStatuses
-        startMaximixed="true"
+        startMaximized
         statuses={{
           test: { status: "healthy", message: "message" },
         }}
@@ -71,7 +71,7 @@ describe("Itemized Services", () => {
     render(
       <StatusContext.Provider value={contextValue}>
         <DisplayStatuses
-          startMaximixed="true"
+          startMaximized
           statuses={{
             test: { status: "healthy", message: "message" },
           }}

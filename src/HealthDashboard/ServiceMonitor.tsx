@@ -166,7 +166,7 @@ function ServiceMonitor({
         <OverallStatus />
         <ItemizedStatus
           filterBy={filterBy}
-          forceMaximized={initialData !== null}
+          forceMaximized={initialData !== null ? true : undefined}
         />
         <HiddenItems />
       </div>
