@@ -1,5 +1,5 @@
 import { statusColor } from "@/lib/statusColor";
-import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle, PauseCircle, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = { status: Status; highlight?: boolean; paused?: boolean };
@@ -11,7 +11,7 @@ function DisplayOverallStatus({
 }: Props) {
   let styles = "bg-transparent";
   if (highlight) styles = "bg-yellow-200 rounded-sm";
-  if (paused) styles = "text-secondary-700 dark:text-secondary-300";
+  if (paused) styles = "text-yellow-700 dark:text-yellow-300";
 
   const color = statusColor(status);
 
@@ -27,9 +27,10 @@ function DisplayOverallStatus({
       Icon = AlertTriangle;
       break;
   }
+  if (paused) Icon = PauseCircle;
 
   return (
-    <section className="flex items-center justify-between rounded-lg bg-gray-50 p-6 shadow dark:bg-gray-900">
+    <section className="flex items-center justify-between rounded-lg bg-gray-50 p-6 shadow-md dark:bg-gray-900">
       <h1 className="text-2xl font-bold">Current Status</h1>
       {highlight && (
         <div
@@ -39,7 +40,10 @@ function DisplayOverallStatus({
           Updated
         </div>
       )}
-      <div className={cn("flex items-center p-1 align-middle", color, styles)}>
+      <div
+        className={cn("flex items-center p-1 align-middle", color, styles)}
+        title={paused ? "Updates are paused" : `System is ${status}`}
+      >
         <Icon size={16} strokeWidth={3} />
         <span
           data-testid="overall-status"

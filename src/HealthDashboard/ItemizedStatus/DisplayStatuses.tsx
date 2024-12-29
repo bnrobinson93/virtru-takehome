@@ -12,6 +12,7 @@ import ListHeader from "./ListHeader";
 import { Accordion } from "@/components/ui/accordion";
 
 type Props = {
+  filterBy?: string;
   checked?: { [K in string]: boolean };
   setChecked?: React.Dispatch<React.SetStateAction<{ [x: string]: boolean }>>;
   shareChecked?: () => void;
@@ -22,7 +23,26 @@ type Props = {
   timestamp?: string;
 };
 
+function checkIfFiltered(
+  filterBy: string,
+  status: ServiceStatus,
+  lastStatus: ServiceStatus | undefined,
+) {
+  if (filterBy === "healthy") {
+    if (status.status !== "healthy") return false;
+  }
+  if (filterBy === "unhealthy") {
+    if (status.status !== "unhealthy") return false;
+  }
+  if (filterBy === "updated") {
+    const isUpdated = lastStatus && lastStatus.status !== status.status;
+    if (!isUpdated) return false;
+  }
+  return true;
+}
+
 function DisplayStatuses({
+  filterBy,
   statuses,
   startMaximixed,
   setChecked,
@@ -55,7 +75,7 @@ function DisplayStatuses({
     <Collapsible
       open={isOpen}
       onOpenChange={handleToggle}
-      className="relative rounded-lg bg-gray-50 p-6 shadow dark:bg-gray-900"
+      className="relative rounded-lg bg-gray-50 p-6 shadow-md dark:bg-gray-900"
     >
       <div
         className={cn(
@@ -97,6 +117,13 @@ function DisplayStatuses({
           <Accordion type="single" collapsible className="w-full">
             {Object.keys(statuses).map((serviceName) => {
               const serviceDetails = statuses[serviceName];
+              const shouldDisplay = checkIfFiltered(
+                filterBy,
+                serviceDetails,
+                prevStatuses[serviceName],
+              );
+
+              if (!shouldDisplay) return null;
 
               return (
                 <ListItem

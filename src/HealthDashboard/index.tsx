@@ -5,10 +5,17 @@ import Footer from "./Footer";
 import Header from "./Header";
 import ServiceMonitor from "./ServiceMonitor";
 import useFetch from "@/hooks/useFetch";
+import useFilter from "@/hooks/useFilter";
 
 const REFRESH_INTERVAL = 5000;
 
 function HealthDashboard() {
+  const { filterBy, setFilterBy } = useFilter();
+
+  const setFilter = (filterBy: string) => {
+    setFilterBy(filterBy);
+  };
+
   const { data, error, loading, pause, resume, paused, lastUpdated } = useFetch(
     "http://localhost:8080/health",
     REFRESH_INTERVAL,
@@ -55,9 +62,16 @@ function HealthDashboard() {
       )}
     >
       <Toaster />
-      <Header pause={pause} resume={resume} paused={paused} />
+      <Header
+        pause={pause}
+        resume={resume}
+        paused={paused}
+        filterBy={filterBy}
+        setFilterBy={setFilter}
+      />
       <main className="mx-auto w-full max-w-4xl space-y-8">
         <ServiceMonitor
+          filterBy={filterBy}
           timestamp={timestamp} // this will either be the querystring timestamp or current time
           initialData={initialData} // this will either be null or the query string data
           data={data} // this is the live, current data

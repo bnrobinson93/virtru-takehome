@@ -1,12 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import StatusContext from "@/contexts/Statuses";
+import { filterData } from "@/lib/filter";
 import DateTime from "./DateTime";
 import OverallStatus from "./OverallStatus";
 import ItemizedStatus from "./ItemizedStatus";
 import HiddenItems from "./HiddenItems";
-import { filterData } from "@/lib/filter";
-import logger from "@/lib/logger";
-// import logger from "@/lib/logger";
+import DisplayError from "./DisplayError";
 
 function readHiddenItems(): Components {
   const hiddenItems = localStorage.getItem("HIDDEN_ITEMS");
@@ -23,6 +22,7 @@ function readHiddenItems(): Components {
 }
 
 type Props = {
+  filterBy: string;
   initialData: PreviousStatus | null;
   data: ServicesHealth | null;
   error: string | null;
@@ -32,6 +32,7 @@ type Props = {
 };
 
 function ServiceMonitor({
+  filterBy,
   initialData, // this is only populated if there is a query string
   data,
   error: err,
@@ -65,7 +66,7 @@ function ServiceMonitor({
     if (initialData) setPreviousStatus(initialData);
 
     if (currentStatus !== null && !initialData) {
-      logger("Updating previous state");
+      // logger("Updating previous state");
       setPreviousStatus({
         data: currentStatus,
         timestamp,
@@ -160,9 +161,10 @@ function ServiceMonitor({
       }}
     >
       <div className="mb-4 flex flex-col justify-between space-y-4">
+        <DisplayError error={error} />
         <DateTime timestamp={time} />
         <OverallStatus />
-        <ItemizedStatus />
+        <ItemizedStatus filterBy={filterBy} />
         <HiddenItems />
       </div>
     </StatusContext.Provider>

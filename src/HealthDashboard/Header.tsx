@@ -1,13 +1,29 @@
 import { Filter, Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import FilterMenu from "./Filter";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-type Props = { pause: () => void; resume: () => void; paused: boolean };
+type Props = {
+  pause: () => void;
+  resume: () => void;
+  paused: boolean;
+  filterBy: string;
+  setFilterBy: (filterBy: string) => void;
+};
 
-function Header({ pause, resume, paused }: Props) {
+function Header({ pause, resume, paused, filterBy, setFilterBy }: Props) {
   const action = paused ? resume : pause;
   const buttonText = paused ? "Resume Updates" : "Pause Updates";
   const Icon = paused ? <Play size={24} /> : <Pause size={24} />;
+
+  const updateFilter = (filterBy: string) => {
+    console.log("[HEADER] Updating filter to", filterBy);
+    setFilterBy(filterBy);
+  };
 
   return (
     <header
@@ -22,19 +38,24 @@ function Header({ pause, resume, paused }: Props) {
       <nav>
         <Button
           variant="ghost"
-          className="px-2 text-primary-500 hover:text-primary-950"
+          className="px-2 text-primary-500 hover:bg-inherit hover:text-primary-950"
           onClick={action}
         >
           {Icon}
           <span className="-ml-1 hidden sm:inline-block">{buttonText}</span>
         </Button>
-        <Button
-          variant="ghost"
-          className="px-2 text-primary-500 hover:text-primary-950"
-        >
-          <Filter />
-          <span className="-ml-1 hidden sm:inline-block">Filter</span>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="px-2 text-primary-500 hover:text-primary-950"
+            >
+              <Filter />
+              <span className="-ml-1 hidden sm:inline-block">Filter</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <FilterMenu filterBy={filterBy} setFilterBy={updateFilter} />
+        </DropdownMenu>
       </nav>
     </header>
   );

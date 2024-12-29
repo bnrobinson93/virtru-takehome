@@ -3,7 +3,9 @@ import DisplayStatuses from "./DisplayStatuses";
 import StatusContext from "@/contexts/Statuses";
 import { toast } from "@/hooks/use-toast";
 
-function ItemizedStatus() {
+type Props = { filterBy: string };
+
+function ItemizedStatus({ filterBy }: Props) {
   const context = useContext(StatusContext);
   const [checked, setChecked] = useState<{ [K in string]: boolean }>({});
 
@@ -49,9 +51,9 @@ function ItemizedStatus() {
     toast({ title: "Copied link to clipboard" });
   };
 
-  console.log(timestamp);
   return (
     <DisplayStatuses
+      filterBy={filterBy}
       checked={checked}
       setChecked={setChecked}
       shareChecked={shareChecked}
