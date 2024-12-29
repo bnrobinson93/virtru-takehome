@@ -132,6 +132,8 @@ With the what I'm working on sorted out, I start thinking through the problem st
 
 Note that links to each library can be found in the [Resources](#resources) section at the bottom of this document.
 
+**High-level**
+
 - This will be a single page application as there is no need for the complexity of a router. While I do plan to use query strings, additional routes are not necessary. See the (Future Enhancements)[#future-enhancements] section for how I might build this out further should the scope change.
   - The general structure will be that of MVC:
     - Each page (just one for this project) will have a directory under `src/`
@@ -148,19 +150,6 @@ Note that links to each library can be found in the [Resources](#resources) sect
 - Lucide React icons will be used for iconography. By similar logic to Shadcn, this industry standard is used in place of a design system and acts as a building block. It allows single-item imports via tree-shaking and is ultimiately just a SVG image; therefore, it is very performant and provides a good developer and user experience.
 - Vitest and React Testing Library will be used for testing. Vitest is a modern testing library that replaces Jest and provides Typescript support out of the box. This is a testing dependency so is not exposed to users. GitHub actions would be a solid testing solution as well; however, I feel that it is out of scope for this project. The aim is to show my ability to code a front-end application. Additionally, most CI/CD work is set up early in the process of development so I do not anticiate needing to do much CI/CD work for Virtru. As such, I see little value in setting it up for this project.
   - All test will be placed in the `__tests__/` directory, the structure of which will mirror the `src/` directory for ease of navigation and review.
-- A custom `useFetch` hook will be created for the fetch that covers the following:
-  - The custom hook will be placed in the `src/hooks` directory
-  - Fetch from a given URL
-  - Leverage AbortControllers to invalidate as necessary
-  - An AbortController will be used to ensure no memory leaks and proper cleanup
-  - Handle loading and error states
-  - Loading and error states will be displayed to the user
-  - While libraries like SWR, Axios or React Query are great, I felt that the `useFetch` hook was a good fit for this project. The needs are fairly minimal, caching is out of scope, and generally not needed for the nature of the application, and it better shows my ability to implement a well designed custom hook.
-- A last updated timestamp will be displayed at the bottom of the page
-  - Note that all services come from one request so the timestamp will be global as opposed to per-service
-- A `useEffect`, in combination with the fetch hook will handle the 5-second re-fetching
-  - A "Pause" button will be added to halt the timer and allow for manual debugging/refreshing
-  - Note that the page will be paused if a share link is detected
 - Two service status objects will maintained in state: previous and current. This is so that differences can be highlighted to users visually
   - If no previous state is found, the highlighting will not occur as that is a poor user experience on first page load
   - Memoization will be used to avoid unnecessary re-renders
@@ -181,6 +170,36 @@ Note that links to each library can be found in the [Resources](#resources) sect
   - If multiple checkboxes are checked, the query string will contain the details for each of the services that are checked on
   - If a query string is detected, the page will default to the expand only the options listed in the query string, ignoring the receiving user's previous preference
   - Any difference between the status of the service at the time of the query string and the current status will be highlighted in some way
+
+**Hooks**
+
+- A custom `useFetch` hook will be created for the fetch that covers the following:
+  - The custom hook will be placed in the `src/hooks` directory
+  - Fetch from a given URL
+  - Leverage AbortControllers to invalidate as necessary
+  - An AbortController will be used to ensure no memory leaks and proper cleanup
+  - Handle loading and error states
+  - Loading and error states will be displayed to the user
+  - While libraries like SWR, Axios or React Query are great, I felt that the `useFetch` hook was a good fit for this project. The needs are fairly minimal, caching is out of scope, and generally not needed for the nature of the application, and it better shows my ability to implement a well designed custom hook.
+- A last updated timestamp will be displayed at the top or bottom of the page
+  - Note that all services come from one request so the timestamp will be global as opposed to per-service
+- A `useEffect`, in combination with the fetch hook will handle the 5-second re-fetching
+  - A "Pause" button will be added to halt the timer and allow for manual debugging/refreshing
+  - Note that the page will be paused if a share link is detected
+
+**Attack plan**
+
+- I aim to treat this application as I would in an agile development environment.
+- Each feature will be developed incrementally, so the design will evolved as it goes.
+- While this may result in a larger number of commits and more changes to the codebase between features, I believe this will better emulate a true front-end dev's workflow.
+- The steps:
+  - First I will develop the overall structure of the page
+  - The useFetch hook will be created next, so that it can begin being used for the rest of the application
+  - The overall status will be created next
+  - The header and footer next
+  - The itemized status will be created next but will be missing features such as filtering, sharing, and hiding items for now
+  - Finally, the hidden items will be created
+  - The functionality will then be added to the itemized status section to fully implement all features
 
 ### Security Considerations
 
