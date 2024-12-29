@@ -134,42 +134,47 @@ Note that links to each library can be found in the [Resources](#resources) sect
 
 **High-level**
 
-- This will be a single page application as there is no need for the complexity of a router. While I do plan to use query strings, additional routes are not necessary. See the (Future Enhancements)[#future-enhancements] section for how I might build this out further should the scope change.
-  - The general structure will be that of MVC:
+- This will be a single page application as there is no need for the complexity of a router. While I do plan to use query strings, additional routes are not necessary. See the [Future Enhancements](#future-enhancements) section for how I might build this out further should the scope change.
+  - The general structure will be:
     - Each page (just one for this project) will have a directory under `src/`
-    - Within that directory, the primary component will be named index.tsx and will handle only visual logic and structure
+    - Within that directory, the primary component will be named index.tsx and will top-level logic
     - Other components used within the page will be split into two categories: general use and page-specific
     - Page specific compoenetns will be placed in the same sub-directory of the `src/` folder as the page itself
     - General purpose components will be placed in the `src/components` directory
-  - Since each component will need access to the fetch results, context will be leveraged
+    - These sub-components will contain the visual logic for each component, as well as any local state and functions
+  - Since each component will need access to the fetch results, React context will be leveraged. Redux feels out of scope but is added to the [Future Enhancements](#future-enhancements) section as a consideration.
 - The page will be written Typescript and React, specifically Vite. While React/Typescript was dictated in the assignment, it would also by my preference as a modern front-end framework
 - Tailwind will be used a for styling. It is a lightweight framework that is vastly used within the industry. As it is highly compressible and scales well, I feel that it is a solid option for building your own design language. Additionally, the Prettier plugin enables a consistent ordering of classes, which is helpful for code review. While CSS is an essential part of front end development, Tailwind - and it's CSS-like utility classes - allows for improved network performance while still demonstrating my ability and understanding of how styling works. Additionally, their color pallet is well thought through and provides good contrast and color-blind friendly options. The library would be installed and only provides styling, there is no security concern with the library. #TODO
   - By extension, Prettier will be used as a dev-dependency to ensure consistency in styling. This is an industry standard and is generally used in almost every company to ensure visual consistency between developers.
 - Shadcn will be leveraged for the beginnings of a component library. This allows full control over the implementation details, ensures accessibility through Radix, and saves time on boilerplate components. At Virtru, I imagine that a design system is already in place and that it would be leveraged; as such, creating my own does not provide much value. Instead, I should focus on the the larger functionality of the application.
   - General purpose items will be placed in the `src/components` directory, not only for shadcn items but also hand-made components. Any item that is pulled by Shadcn will be designated as such via a comment in that component
+  - Shadcn makes use of Radix primitives, which handles accessiblity and basic functionality
 - Lucide React icons will be used for iconography. By similar logic to Shadcn, this industry standard is used in place of a design system and acts as a building block. It allows single-item imports via tree-shaking and is ultimiately just a SVG image; therefore, it is very performant and provides a good developer and user experience.
 - Vitest and React Testing Library will be used for testing. Vitest is a modern testing library that replaces Jest and provides Typescript support out of the box. This is a testing dependency so is not exposed to users. GitHub actions would be a solid testing solution as well; however, I feel that it is out of scope for this project. The aim is to show my ability to code a front-end application. Additionally, most CI/CD work is set up early in the process of development so I do not anticiate needing to do much CI/CD work for Virtru. As such, I see little value in setting it up for this project.
   - All test will be placed in the `__tests__/` directory, the structure of which will mirror the `src/` directory for ease of navigation and review.
-- Two service status objects will maintained in state: previous and current. This is so that differences can be highlighted to users visually
+- Two service status objects will maintained in the context: previous and current. This is so that differences can be highlighted to users visually
   - If no previous state is found, the highlighting will not occur as that is a poor user experience on first page load
   - Memoization will be used to avoid unnecessary re-renders
-- The page will display the overall status and a minimized list of services
+- The page will display the overall status, a minimized list of services, and a list of hidden services
+- Items will be "moveable" between the minimized list and the hidden list
+  - A bulk operation will be available via check boxes and a "Restore all" button
 - Filtering
   - There will be a global "Show/hide All" button - default will be to only show the overall status so as not to overwhelm users.
   - The selected show/hide state will be stored in local storage so that a user's preference is retained between page refreshes (no DB or that would be an option, too)
   - When expanded, a "Hide" button will be shown next to each entry to quickly hide a single entry
   - Additionally, there will be checkboxes next to each entry to allow user to mass-hide/show the entries
   - Any hidden entries will be moved to a collapse section at the bottom of the page for restoration. There will be a "Restore all" button inside the collapse for ease of use.
-  - A "Filter by status" drop-down will be available. Statuses will be itemized but grayed out if not present in the response. This will be a list of check boxes
+  - A "Filter by status" drop-down will be available. This will be a radio list
   - A text filter will be at the top for manual filtering
 - Sharing
   - The primary modes of sharing that could be used here are via file or via a link. From a user perspective, a link is far more sharable, so that will be used.
-  - #TODO can I use the global URL bar?
   - Each entry will also have a "Share" button next it to allow the user to share a link with the status of the service at a point-in-time
   - Share links will store the status by query string. The string will contain the time stamp and the status of the individual service as well as overall status
   - If multiple checkboxes are checked, the query string will contain the details for each of the services that are checked on
   - If a query string is detected, the page will default to the expand only the options listed in the query string, ignoring the receiving user's previous preference
   - Any difference between the status of the service at the time of the query string and the current status will be highlighted in some way
+- Logging
+  - A global utility function will be used for logging messages. This has a basic check to ensure we're not running in production and, if we are, will not log anything to the console
 
 **Hooks**
 
@@ -177,15 +182,15 @@ Note that links to each library can be found in the [Resources](#resources) sect
   - The custom hook will be placed in the `src/hooks` directory
   - Fetch from a given URL
   - Leverage AbortControllers to invalidate as necessary
+  - While libraries like SWR, Axios or React Query are great, I felt that the `useFetch` hook was a good fit for this project. The needs are fairly minimal, caching is out of scope, and generally not needed for the nature of the application, and it better shows my ability to implement a well designed custom hook.
+  - A `useEffect`, in combination with the fetch hook will handle the 5-second re-fetching
   - An AbortController will be used to ensure no memory leaks and proper cleanup
   - Handle loading and error states
   - Loading and error states will be displayed to the user
-  - While libraries like SWR, Axios or React Query are great, I felt that the `useFetch` hook was a good fit for this project. The needs are fairly minimal, caching is out of scope, and generally not needed for the nature of the application, and it better shows my ability to implement a well designed custom hook.
-- A last updated timestamp will be displayed at the top or bottom of the page
-  - Note that all services come from one request so the timestamp will be global as opposed to per-service
-- A `useEffect`, in combination with the fetch hook will handle the 5-second re-fetching
   - A "Pause" button will be added to halt the timer and allow for manual debugging/refreshing
   - Note that the page will be paused if a share link is detected
+- A last updated timestamp will be displayed at the top or bottom of the page
+  - Note that all services come from one request so the timestamp will be global as opposed to per-service
 
 **Attack plan**
 
@@ -239,7 +244,8 @@ At first pass, there should be minimal security concerns. Considering the OWASP 
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Is Tailwind acceptable?**  | Tailwind is a CSS framework that provides utility classes. The primary drawback that most consider is that it clutters the DOM with classes where a single class could be used to accomplisht he same style. However, the advantage to Tailwind is that the CSS is highly compressible and provides consistency in two ways: 1) classes in the CSS are consistently placed preventing the "cascade" of CSS from becoming a negative and 2) the prettier plugin which sorts classes in the same order as the Tailwind CSS list, making it clear to a developer of the exact order that classes will be applied. This also helps in code review as the Prettier plugin makes highlighting new/removed classes more obvious. To resolve the clutter issue, I generally prefer to use a flavor of the MVC pattern where I use one component for the "view" (that is, HTML + classes) and one or more child components for the logic. | If you feel that tailwind is a good choice for you to create the kind of experience that a customer would love then that makes sense. If you do choose tailwind I would encourage you to follow their recommendations since we will be considering that.                                    |
 | **Submission**               | Would you like my submission to be a zip of the code, GitHub link, or something else? If GitHub, would you like any actions set up or should testing be done locally? Should the submission include build steps and/or the compiled app, as well, or just the code itself?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | I'll let you decide how you want to demonstrate your work. A Readme is helpful for us to assess the alignment between the readme and our experience getting it running.                                                                                                                     |
-| **Security - Query Strings** | 'm thinking that I will use query strings to share point-in-time links. RBAC seems out of scope but I did want to ask if yall have a preference on encrypting parameters? Since it would be a date/time and statuses at the most, I don't see anything super sensitive being leaked, however, I could see a potential risk there as the contents will be displayed, meaning there's a risk for script injection. Do you have any process or recommendations there?                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Access control is out of scope for this project. That said there are security concerns you should spend some time considering specifically with XSS. We will also consider developer experience so if the tooling doesn't exist to easily debug issues that might be considered a turn off. |
+| **Security - Query Strings** | I'm thinking that I will use query strings to share point-in-time links. RBAC seems out of scope but I did want to ask if yall have a preference on encrypting parameters? Since it would be a date/time and statuses at the most, I don't see anything super sensitive being leaked, however, I could see a potential risk there as the contents will be displayed, meaning there's a risk for script injection. Do you have any process or recommendations there?                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Access control is out of scope for this project. That said there are security concerns you should spend some time considering specifically with XSS. We will also consider developer experience so if the tooling doesn't exist to easily debug issues that might be considered a turn off. |
+| **Logging**                  | One of the requirements for this project is logging. How should that be handled in a front end application?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Manage expectations in the README                                                                                                                                                                                                                                                           |
 
 ### Future Enhancements
 
