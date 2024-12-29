@@ -6,6 +6,7 @@ import ItemizedStatus from "./ItemizedStatus";
 import HiddenItems from "./HiddenItems";
 import { filterData } from "@/lib/filter";
 import logger from "@/lib/logger";
+// import logger from "@/lib/logger";
 
 function readHiddenItems(): Components {
   const hiddenItems = localStorage.getItem("HIDDEN_ITEMS");
@@ -22,6 +23,7 @@ function readHiddenItems(): Components {
 }
 
 type Props = {
+  initialData: PreviousStatus | null;
   data: ServicesHealth | null;
   error: string | null;
   loading: boolean;
@@ -29,36 +31,76 @@ type Props = {
   timestamp: string;
 };
 
-function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
-  const [error, setError] = useState<string>("");
+function ServiceMonitor({
+  initialData, // this is only populated if there is a query string
+  data,
+  error: err,
+  paused,
+  timestamp,
+}: Props) {
+  const [error, setError] = useState<string>(err || "");
+
+  // either the querystring timestamp or current time
   const [time, setTime] = useState(timestamp);
+
   const [currentStatus, setCurrentStatus] = useState(data);
-  const [previousStatus, setPreviousStatus] = useState<ServicesHealth | null>(
-    null,
-  );
+
+  // this will either be the previous iteration of the data or static query string data
+  const [previousStatus, setPreviousStatus] = useState(initialData);
+
   const [hiddenItems, setHiddenItems] = useState<Components>({});
 
+  // This will only run if there is no querystring as that is the only time that timestamp changes
   useEffect(() => setTime(timestamp), [timestamp]);
 
   // Using layout effect to avoid a hidden items section from popping in late
   useLayoutEffect(() => setHiddenItems(readHiddenItems()), []);
 
+  // Handle data rotation
   useEffect(() => {
     if (err) return setError(err);
+    if (time === timestamp && initialData === null) return;
     setError("");
-    setPreviousStatus(currentStatus);
+
+    if (initialData) setPreviousStatus(initialData);
+
+    if (currentStatus !== null && !initialData) {
+      logger("Updating previous state");
+      setPreviousStatus({
+        data: currentStatus,
+        timestamp,
+      });
+    }
+
     setCurrentStatus(data);
-  }, [data, err, currentStatus]);
+  }, [data, err, currentStatus, initialData, timestamp, time]);
 
-  const filteredData = useMemo(
-    () => filterData(currentStatus, hiddenItems),
-    [currentStatus, hiddenItems],
-  );
+  // Each time the data updates, filter based on the hidden items
+  const filteredData = useMemo(() => {
+    if (currentStatus === null) return null;
 
+    let removeList = hiddenItems;
+
+    // In the case of a query string, we should remove any items
+    // that are NOT a part of the shared list
+    if (initialData?.data.components) {
+      const fullList = Object.keys(currentStatus.components);
+      const diffList = {} as Components;
+      fullList.map((serviceName) => {
+        if (initialData.data.components[serviceName] === undefined)
+          diffList[serviceName] = currentStatus.components[serviceName];
+      });
+      removeList = diffList;
+    }
+
+    return filterData(currentStatus, removeList);
+  }, [currentStatus, hiddenItems, initialData]);
+
+  /** Moves a service from the visible list to the hidden list */
   const addHiddenItem = (serviceNames: string[]) => {
     if (currentStatus === null) return;
 
-    logger(`Adding ${serviceNames}`);
+    // logger(`Adding ${serviceNames}`);
     serviceNames.map((serviceName) => {
       if (hiddenItems[serviceName] !== undefined) return;
       const newComponent = currentStatus.components[serviceName];
@@ -72,16 +114,17 @@ function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
     });
   };
 
+  /** Moves a service from the hidden list to the visible list */
   const removeHiddenItem = (serviceNames: string[]) => {
     if (currentStatus === null) return;
     if (serviceNames.length === 0) {
-      logger(`Removing all hidden items ${serviceNames}`);
+      // logger(`Removing all hidden items ${serviceNames}`);
       localStorage.removeItem("HIDDEN_ITEMS");
       setHiddenItems({});
       return;
     }
 
-    logger(`Removing ${serviceNames}`);
+    // logger(`Removing ${serviceNames}`);
 
     const newHiddenItems = hiddenItems;
     serviceNames.map((serviceName) => {
@@ -95,6 +138,7 @@ function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
     setHiddenItems(newHiddenItems);
   };
 
+  /** Handles the toggling of items in the hidden list */
   const updateHiddenItems = (
     serviceNames: string[],
     action: "add" | "remove",
@@ -103,8 +147,6 @@ function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
     if (action === "remove") removeHiddenItem(serviceNames);
   };
 
-  const displayTime = paused ? timestamp : time;
-
   return (
     <StatusContext.Provider
       value={{
@@ -112,12 +154,13 @@ function ServiceMonitor({ data, error: err, paused, timestamp }: Props) {
         previousStatus: previousStatus,
         hiddenItems,
         updateHiddenItems,
-        timestamp: displayTime,
+        timestamp: time,
         paused,
+        error,
       }}
     >
       <div className="mb-4 flex flex-col justify-between space-y-4">
-        <DateTime timestamp={displayTime} />
+        <DateTime timestamp={time} />
         <OverallStatus />
         <ItemizedStatus />
         <HiddenItems />

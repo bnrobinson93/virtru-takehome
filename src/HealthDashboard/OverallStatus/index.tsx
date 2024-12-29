@@ -20,7 +20,7 @@ function OverallStatus() {
     return <DisplayOverallStatus status={currentStatus.status} />;
 
   // From the third fetch onwards, the status should reflect change
-  const isNewStatus = previousStatus.status !== currentStatus.status;
+  const isNewStatus = previousStatus.data.status !== currentStatus.status;
 
   return (
     <DisplayOverallStatus

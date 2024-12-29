@@ -14,7 +14,7 @@ function HealthDashboard() {
     REFRESH_INTERVAL,
   );
 
-  const [dataToDisplay, setDataToDisplay] = useState(data);
+  const [initialData, setInitialData] = useState<PreviousStatus | null>(null);
   const [timestamp, setTimestamp] = useState(lastUpdated);
 
   // Prevent rerender loop since this runs before other hooks
@@ -23,8 +23,13 @@ function HealthDashboard() {
     [],
   );
 
-  if (searchParams.size > 0 && !paused) pause();
+  // if no query string, set the timestamp to current time
+  useEffect(() => {
+    if (searchParams.size > 0) return;
+    setTimestamp(lastUpdated);
+  }, [lastUpdated, searchParams]);
 
+  // handle query string for setting previous data statically
   useEffect(() => {
     if (searchParams.size === 0) return;
 
@@ -37,15 +42,11 @@ function HealthDashboard() {
     const componentsArr = JSON.parse(componentsStr || "{}") as Components[];
     const components = Object.assign({}, ...componentsArr);
 
-    setDataToDisplay({ status, components });
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (paused) return;
-    console.log("Updating", lastUpdated, data);
-    setTimestamp(lastUpdated);
-    setDataToDisplay(data);
-  }, [paused, lastUpdated, data]);
+    setInitialData({
+      data: { status, components },
+      timestamp: timestamp || lastUpdated,
+    });
+  }, [searchParams, lastUpdated]);
 
   return (
     <div
@@ -57,8 +58,9 @@ function HealthDashboard() {
       <Header pause={pause} resume={resume} paused={paused} />
       <main className="mx-auto w-full max-w-4xl space-y-8">
         <ServiceMonitor
-          timestamp={timestamp}
-          data={dataToDisplay}
+          timestamp={timestamp} // this will either be the querystring timestamp or current time
+          initialData={initialData} // this will either be null or the query string data
+          data={data} // this is the live, current data
           error={error}
           loading={loading}
           paused={paused}

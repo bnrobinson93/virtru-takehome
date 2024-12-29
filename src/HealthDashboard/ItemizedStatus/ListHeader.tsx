@@ -5,7 +5,7 @@ import { type CheckedState } from "@radix-ui/react-checkbox";
 
 type Props = {
   checked: { [K in string]: boolean };
-  setChecked: React.Dispatch<React.SetStateAction<{ [x: string]: boolean }>>;
+  setChecked?: React.Dispatch<React.SetStateAction<{ [x: string]: boolean }>>;
 };
 
 function ListHeader({ checked, setChecked }: Props) {
@@ -32,18 +32,20 @@ function ListHeader({ checked, setChecked }: Props) {
   return (
     <span className="my-2 flex justify-between border-b-2 py-2 text-sm text-gray-800">
       <div className="flex items-center space-x-4">
-        <Checkbox
-          className="border-gray-800"
-          title="Select All"
-          id="select-all"
-          checked={checkedState}
-          onCheckedChange={(checkedVal) => {
-            setCheckedState(!!checkedVal);
-            Object.keys(components).map((service) =>
-              setChecked((old) => ({ ...old, [service]: !!checkedVal })),
-            );
-          }}
-        />
+        {setChecked && (
+          <Checkbox
+            className="border-gray-800"
+            title="Select All"
+            id="select-all"
+            checked={checkedState}
+            onCheckedChange={(checkedVal) => {
+              setCheckedState(!!checkedVal);
+              Object.keys(components).map((service) =>
+                setChecked((old) => ({ ...old, [service]: !!checkedVal })),
+              );
+            }}
+          />
+        )}
         <span className="h-3 w-3 rounded-full">
           <span className="sr-only">Status</span>
         </span>

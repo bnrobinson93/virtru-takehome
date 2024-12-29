@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import logger from "@/lib/logger";
+// import logger from "@/lib/logger";
 import { statusColorBg } from "@/lib/statusColor";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ function ListItem({ serviceName, status, checked, setChecked }: Props) {
         description: "Please try again later",
       });
 
-    logger(`Restoring ${serviceName}`);
+    // logger(`Restoring ${serviceName}`);
     setRemoving(true);
 
     const { updateHiddenItems } = context;

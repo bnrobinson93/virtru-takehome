@@ -7,7 +7,7 @@ import "@testing-library/jest-dom/vitest";
 import { it, expect, describe, vi } from "vitest";
 
 let currentStatus: ServicesHealth | null = null;
-let previousStatus: ServicesHealth | null = null;
+let previousStatus: PreviousStatus | null = null;
 const hiddenItems: Components = {};
 const timestamp = new Date().toISOString();
 const paused = false;
@@ -67,8 +67,11 @@ describe("Overall Status", () => {
       components: { service: { status: "healthy" as Status, message: "" } },
     };
     previousStatus = {
-      status: "unhealthy" as Status,
-      components: { service: { status: "healthy" as Status, message: "" } },
+      data: {
+        status: "unhealthy" as Status,
+        components: { service: { status: "healthy" as Status, message: "" } },
+      },
+      timestamp: new Date().toISOString(),
     };
 
     render(

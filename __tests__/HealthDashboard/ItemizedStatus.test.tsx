@@ -6,6 +6,8 @@ import StatusContext from "@/contexts/Statuses";
 // NOTE: These could be added to global config but it doesn't play nicely with nvim
 import "@testing-library/jest-dom/vitest";
 import { it, expect, describe, vi } from "vitest";
+import ListItem from "@/HealthDashboard/ItemizedStatus/ListItem";
+import { Accordion } from "@/components/ui/accordion";
 
 const user = userEvent.setup();
 
@@ -75,5 +77,39 @@ describe("Itemized Services", () => {
     await user.click(hideButton);
 
     expect(updateHiddenItems).toHaveBeenCalledWith(["test"], "add");
+  });
+  it("should not show a change in status if the status did not change", () => {
+    render(
+      <Accordion type="single" collapsible>
+        <ListItem
+          serviceName="test"
+          checked={{}}
+          status={{ status: "healthy", message: "" }}
+          lastStatus={{ status: "healthy", message: "" }}
+          lastStatusTimestamp={new Date().toISOString()}
+        />
+      </Accordion>,
+    );
+
+    const row = screen.queryByTestId("update-badge");
+
+    expect(row).not.toBeInTheDocument();
+  });
+  it("should show a change in status", () => {
+    render(
+      <Accordion type="single" collapsible>
+        <ListItem
+          serviceName="test"
+          checked={{}}
+          status={{ status: "healthy", message: "" }}
+          lastStatus={{ status: "unhealthy", message: "" }}
+          lastStatusTimestamp={new Date().toISOString()}
+        />
+      </Accordion>,
+    );
+
+    const row = screen.getByTestId("update-badge");
+
+    expect(row).toBeInTheDocument();
   });
 });

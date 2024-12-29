@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ListItem from "./ListItem";
 import { cn } from "@/lib/utils";
 import ListHeader from "./ListHeader";
+import { Accordion } from "@/components/ui/accordion";
 
 type Props = {
   checked?: { [K in string]: boolean };
@@ -17,6 +18,8 @@ type Props = {
   hideChecked?: () => void;
   startMaximixed?: "true" | "false";
   statuses?: ServicesHealth["components"];
+  prevStatuses?: ServicesHealth["components"];
+  timestamp?: string;
 };
 
 function DisplayStatuses({
@@ -25,7 +28,9 @@ function DisplayStatuses({
   setChecked,
   shareChecked,
   hideChecked,
+  timestamp,
   checked = {},
+  prevStatuses = {},
 }: Props) {
   const [isOpen, setIsOpen] = useState(startMaximixed === "true");
 
@@ -85,10 +90,11 @@ function DisplayStatuses({
       <CollapsibleContent>
         <>
           <p className="text-sm text-gray-800">
-            Hover an item to view a more detailed status.
+            Hover an item to view a more detailed status. Items highlighted in
+            yellow have changed status.
           </p>
           <ListHeader setChecked={setChecked} checked={checked} />
-          <ul className="divide-y divide-gray-500">
+          <Accordion type="single" collapsible className="w-full">
             {Object.keys(statuses).map((serviceName) => {
               const serviceDetails = statuses[serviceName];
 
@@ -99,10 +105,12 @@ function DisplayStatuses({
                   status={serviceDetails}
                   checked={checked}
                   setChecked={setChecked}
+                  lastStatus={prevStatuses[serviceName]}
+                  lastStatusTimestamp={timestamp}
                 />
               );
             })}
-          </ul>
+          </Accordion>
         </>
       </CollapsibleContent>
     </Collapsible>

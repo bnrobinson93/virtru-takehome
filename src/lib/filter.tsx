@@ -1,5 +1,6 @@
-import logger from "./logger";
+// import logger from "./logger";
 
+/** Filters out hidden items from a data set */
 const filterData = (
   fullData: ServicesHealth | null,
   itemsToHide: Components,
@@ -11,7 +12,7 @@ const filterData = (
 
   Object.keys(fullData.components).filter((serviceName) => {
     if (itemsToHide[serviceName] === undefined) {
-      logger(`Keeping ${serviceName}`);
+      // logger(`Keeping ${serviceName}`);
       components[serviceName] = fullData.components[serviceName];
     }
   });

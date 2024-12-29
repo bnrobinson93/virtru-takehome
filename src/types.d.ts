@@ -14,6 +14,11 @@ type ServicesHealth = {
   components: Components;
 };
 
+type PreviousStatus = {
+  data: ServicesHealth;
+  timestamp: string;
+};
+
 type UseFetchReturn = {
   lastUpdated: string;
   error: string | null;

@@ -44,10 +44,10 @@ What we are looking for:
 - [ ] **Completeness**: Does the code fulfill the requirements? Are there assurances that it works?
   - We are looking to see if you have completed the requirements of the challenge.
   - Do you have a few tests to assure it functions as expected and constraint trade-offs.
-- [x] **Safety**: Have you considered security vulnerabilities? Are you handling errors?
+- [ ] **Safety**: Have you considered security vulnerabilities? Are you handling errors?
   - We are looking to see if you have considered security implications.
     - Are you following OWASP [basic security considerations](https://owasp.org/www-project-developer-guide/draft/design/web_app_checklist/)?
-- [x] **Creativity**: Does it solve the problem? Why would customers love your solution?
+- [ ] **Creativity**: Does it solve the problem? Why would customers love your solution?
   - We are looking to see how you thought about the problem with empathy for users.
   - We are looking for creative solutions with a focus on balancing customer experience, time, and
     functionality.
@@ -86,12 +86,12 @@ your inspiration and how it applies to the problem.
 - [x] Write a one page README explaining your design decisions, trade-offs, and any assumptions as well
       as any instructions on how to run your application.
 - [x] Use React and TypeScript to build the application.
-- [ ] Show the overall health of the systems and the health of individual services
-- [ ] Allow users to view the health of individual services
-- [ ] Allow users to select which services they want to see
-- [ ] Service health should be updated every 5 seconds to simulate real-time updates
-- [ ] Alert the user when the service status changes
-- [ ] Allow users to manually share links with the status of the service in a point-in-time
+- [x] Show the overall health of the systems and the health of individual services
+- [x] Allow users to view the health of individual services
+- [x] Allow users to select which services they want to see
+- [x] Service health should be updated every 5 seconds to simulate real-time updates
+- [x] Alert the user when the service status changes
+- [x] Allow users to manually share links with the status of the service in a point-in-time
       When loading page with shared link we should see the difference in status from point-in-time
 
 _Note:_ There is no database so we are not expecting the service status to be saved between sessions

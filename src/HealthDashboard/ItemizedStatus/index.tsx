@@ -14,10 +14,6 @@ function ItemizedStatus() {
   const { currentStatus, previousStatus, updateHiddenItems, timestamp } =
     context;
 
-  if (previousStatus === null) {
-    return <DisplayStatuses statuses={currentStatus.components} />;
-  }
-
   const startMaximixed = localStorage.getItem(
     "START_SERVICES_MAXIMIZED",
   ) as MinimizedValues;
@@ -53,6 +49,7 @@ function ItemizedStatus() {
     toast({ title: "Copied link to clipboard" });
   };
 
+  console.log(timestamp);
   return (
     <DisplayStatuses
       checked={checked}
@@ -61,6 +58,8 @@ function ItemizedStatus() {
       hideChecked={hideChecked}
       startMaximixed={startMaximixed}
       statuses={currentStatus.components}
+      prevStatuses={previousStatus ? previousStatus.data.components : undefined}
+      timestamp={timestamp}
     />
   );
 }
