@@ -112,8 +112,8 @@ function DisplayStatuses({
       <CollapsibleContent>
         <>
           <p className="text-sm text-gray-800">
-            Hover an item to view a more detailed status. Items highlighted in
-            yellow have changed status.
+            Hover an item to view a more detailed status. Items signified with
+            highlighting and a badge have changed status.
           </p>
           <ListHeader setChecked={setChecked} checked={checked} />
           <Accordion type="single" collapsible className="w-full">
