@@ -2,12 +2,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DisplayStatuses from "../../src/HealthDashboard/ItemizedStatus/DisplayStatuses";
 import StatusContext from "@/contexts/Statuses";
+import ListItem from "@/HealthDashboard/ItemizedStatus/ListItem";
+import { Accordion } from "@/components/ui/accordion";
 
 // NOTE: These could be added to global config but it doesn't play nicely with nvim
 import "@testing-library/jest-dom/vitest";
 import { it, expect, describe, vi } from "vitest";
-import ListItem from "@/HealthDashboard/ItemizedStatus/ListItem";
-import { Accordion } from "@/components/ui/accordion";
 
 const user = userEvent.setup();
 
@@ -62,14 +62,12 @@ describe("Itemized Services", () => {
 
     render(
       <StatusContext.Provider value={contextValue}>
-        <StatusContext.Provider value={{ updateHiddenItems }}>
-          <DisplayStatuses
-            startMaximixed="true"
-            statuses={{
-              test: { status: "healthy", message: "message" },
-            }}
-          />
-        </StatusContext.Provider>
+        <DisplayStatuses
+          startMaximixed="true"
+          statuses={{
+            test: { status: "healthy", message: "message" },
+          }}
+        />
       </StatusContext.Provider>,
     );
 
@@ -78,6 +76,7 @@ describe("Itemized Services", () => {
 
     expect(updateHiddenItems).toHaveBeenCalledWith(["test"], "add");
   });
+
   it("should not show a change in status if the status did not change", () => {
     render(
       <Accordion type="single" collapsible>
@@ -95,6 +94,7 @@ describe("Itemized Services", () => {
 
     expect(row).not.toBeInTheDocument();
   });
+
   it("should show a change in status", () => {
     render(
       <Accordion type="single" collapsible>

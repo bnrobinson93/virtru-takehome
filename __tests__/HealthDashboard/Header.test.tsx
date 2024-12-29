@@ -10,9 +10,20 @@ let paused = false;
 const pause = () => (paused = true);
 const resume = () => (paused = false);
 
+let filterBy = "";
+const setFilterBy = (newVal: string) => (filterBy = newVal);
+
 describe("Header", () => {
   it("Has a Pause button when fetching", () => {
-    render(<Header pause={pause} resume={resume} paused={false} />);
+    render(
+      <Header
+        pause={pause}
+        resume={resume}
+        paused={false}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
+      />,
+    );
 
     const pauseButton = screen.getByRole("button", { name: /Pause/i });
 
@@ -20,7 +31,15 @@ describe("Header", () => {
   });
 
   it("Has a Resume button when paused", () => {
-    render(<Header pause={pause} resume={resume} paused={true} />);
+    render(
+      <Header
+        pause={pause}
+        resume={resume}
+        paused={true}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
+      />,
+    );
 
     const resumeButton = screen.getByRole("button", { name: /Resume/i });
 
@@ -28,13 +47,39 @@ describe("Header", () => {
   });
 
   it("Clicking the pause/resume button should toggle it's state", async () => {
-    paused = false;
-    render(<Header pause={pause} resume={resume} paused={paused} />);
+    render(
+      <Header
+        pause={pause}
+        resume={resume}
+        paused={false}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
+      />,
+    );
 
     const pauseButton = screen.getByRole("button", { name: /Pause/i });
     const user = userEvent.setup();
     await user.click(pauseButton);
 
     expect(paused).toBe(true);
+  });
+
+  it("should allow filtering", async () => {
+    render(
+      <Header
+        pause={pause}
+        resume={resume}
+        paused={false}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
+      />,
+    );
+
+    const filterButton = screen.getByRole("button", { name: /Filter/i });
+    const user = userEvent.setup();
+    await user.click(filterButton);
+    await user.click(screen.getByRole("menuitemradio", { name: "Healthy" }));
+
+    expect(filterBy).toBe("healthy");
   });
 });
