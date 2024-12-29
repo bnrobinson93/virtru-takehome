@@ -18,7 +18,7 @@ type Props = {
   shareChecked?: () => void;
   hideChecked?: () => void;
   shareItem?: (serviceName: string, status: ServiceStatus) => void;
-  startMaximixed?: "true" | "false";
+  startMaximized?: "true" | "false";
   statuses?: ServicesHealth["components"];
   prevStatuses?: ServicesHealth["components"];
   timestamp?: string;
@@ -45,7 +45,7 @@ function checkIfFiltered(
 function DisplayStatuses({
   filterBy,
   statuses,
-  startMaximixed,
+  startMaximized,
   setChecked,
   shareChecked,
   hideChecked,
@@ -54,12 +54,12 @@ function DisplayStatuses({
   checked = {},
   prevStatuses = {},
 }: Props) {
-  const [isOpen, setIsOpen] = useState(startMaximixed === "true");
+  const [isOpen, setIsOpen] = useState(startMaximized === "true");
 
   // Using layout effect to avoid rendiering incorrectly on first load
   useLayoutEffect(() => {
-    if (startMaximixed === "true") setIsOpen(true);
-  }, [startMaximixed]);
+    if (startMaximized === "true") setIsOpen(true);
+  }, [startMaximized]);
 
   if (statuses === undefined) return <div />;
 

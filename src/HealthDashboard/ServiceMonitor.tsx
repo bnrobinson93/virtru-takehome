@@ -164,7 +164,10 @@ function ServiceMonitor({
         <DisplayError error={error} />
         <DateTime timestamp={time} />
         <OverallStatus />
-        <ItemizedStatus filterBy={filterBy} />
+        <ItemizedStatus
+          filterBy={filterBy}
+          forceMaximized={initialData !== null}
+        />
         <HiddenItems />
       </div>
     </StatusContext.Provider>

@@ -3,9 +3,9 @@ import DisplayStatuses from "./DisplayStatuses";
 import StatusContext from "@/contexts/Statuses";
 import { toast } from "@/hooks/use-toast";
 
-type Props = { filterBy: string };
+type Props = { filterBy: string; forceMaximized?: boolean };
 
-function ItemizedStatus({ filterBy }: Props) {
+function ItemizedStatus({ filterBy, forceMaximized = false }: Props) {
   const context = useContext(StatusContext);
   const [checked, setChecked] = useState<{ [K in string]: boolean }>({});
 
@@ -16,9 +16,9 @@ function ItemizedStatus({ filterBy }: Props) {
   const { currentStatus, previousStatus, updateHiddenItems, timestamp } =
     context;
 
-  const startMaximixed = localStorage.getItem(
-    "START_SERVICES_MAXIMIZED",
-  ) as MinimizedValues;
+  const startMaximized = forceMaximized
+    ? String(forceMaximized)
+    : (localStorage.getItem("START_SERVICES_MAXIMIZED") as MinimizedValues);
 
   const hideChecked = () => {
     updateHiddenItems(Object.keys(checked), "add");
@@ -80,7 +80,7 @@ function ItemizedStatus({ filterBy }: Props) {
       shareChecked={shareChecked}
       hideChecked={hideChecked}
       shareItem={shareSingleItem}
-      startMaximixed={startMaximixed}
+      startMaximized={startMaximized}
       statuses={currentStatus.components}
       prevStatuses={previousStatus ? previousStatus.data.components : undefined}
       timestamp={timestamp}
