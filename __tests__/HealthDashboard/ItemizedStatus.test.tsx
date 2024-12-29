@@ -89,6 +89,7 @@ describe("Itemized Services", () => {
     render(
       <Accordion type="single" collapsible>
         <ListItem
+          shareItem={vi.fn()}
           serviceName="test"
           checked={{}}
           status={{ status: "healthy", message: "" }}
@@ -107,6 +108,7 @@ describe("Itemized Services", () => {
     render(
       <Accordion type="single" collapsible>
         <ListItem
+          shareItem={vi.fn()}
           serviceName="test"
           checked={{}}
           status={{ status: "healthy", message: "" }}

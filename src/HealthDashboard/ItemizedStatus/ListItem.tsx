@@ -1,4 +1,3 @@
-import { useToast } from "@/hooks/use-toast";
 import { statusColorBg } from "@/lib/statusColor";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ type Props = {
   setChecked?: React.Dispatch<React.SetStateAction<{ [K in string]: boolean }>>;
   lastStatus?: ServiceStatus;
   lastStatusTimestamp?: string;
-  shareItem: (serviceName: string, status: ServiceStatus) => void;
+  shareItem?: (serviceName: string, status: ServiceStatus) => void;
 };
 
 function MoreDetail(
@@ -132,7 +131,7 @@ function ListItem({
           <Button
             variant="link"
             className="font-semibold text-primary-300"
-            onClick={() => shareItem(serviceName, status)}
+            onClick={() => shareItem && shareItem(serviceName, status)}
           >
             <Share2 />
             Share
