@@ -29,7 +29,16 @@ describe("Hidden Items", () => {
   // However, I wanted something to at least mock it out
   it("should allow hidden items to be restored", async () => {
     const updateHiddenItems = vi.fn();
-    const contextValue = { updateHiddenItems };
+    const contextValue = {
+      currentStatus: null,
+      previousStatus: null,
+      hiddenItems: {},
+      updateHiddenItems,
+      timestamp: "",
+      paused: false,
+      error: null,
+    };
+
     render(
       <StatusContext.Provider value={contextValue}>
         <ListItem

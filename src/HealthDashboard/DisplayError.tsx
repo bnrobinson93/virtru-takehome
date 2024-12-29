@@ -14,6 +14,8 @@ function DisplayError({ error }: Props) {
       variant: "destructive",
     });
   }, [error, toast]);
+
+  return <></>;
 }
 
 export default DisplayError;

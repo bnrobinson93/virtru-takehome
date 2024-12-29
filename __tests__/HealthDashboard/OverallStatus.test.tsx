@@ -18,6 +18,7 @@ describe("Overall Status", () => {
     render(
       <StatusContext.Provider
         value={{
+          error: "",
           currentStatus,
           previousStatus,
           hiddenItems,
@@ -44,6 +45,7 @@ describe("Overall Status", () => {
     render(
       <StatusContext.Provider
         value={{
+          error: "",
           currentStatus,
           previousStatus,
           hiddenItems,
@@ -77,6 +79,7 @@ describe("Overall Status", () => {
     render(
       <StatusContext.Provider
         value={{
+          error: "",
           currentStatus,
           previousStatus,
           hiddenItems,

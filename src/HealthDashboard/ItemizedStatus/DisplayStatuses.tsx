@@ -118,7 +118,7 @@ function DisplayStatuses({
             {Object.keys(statuses).map((serviceName) => {
               const serviceDetails = statuses[serviceName];
               const shouldDisplay = checkIfFiltered(
-                filterBy,
+                filterBy || "",
                 serviceDetails,
                 prevStatuses[serviceName],
               );

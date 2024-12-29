@@ -58,7 +58,15 @@ describe("Itemized Services", () => {
   // However, I wanted something to at least mock it out
   it("should allow the hiding of items", async () => {
     const updateHiddenItems = vi.fn();
-    const contextValue = { updateHiddenItems };
+    const contextValue = {
+      currentStatus: null,
+      previousStatus: null,
+      hiddenItems: {},
+      updateHiddenItems,
+      timestamp: "",
+      paused: false,
+      error: null,
+    };
 
     render(
       <StatusContext.Provider value={contextValue}>
