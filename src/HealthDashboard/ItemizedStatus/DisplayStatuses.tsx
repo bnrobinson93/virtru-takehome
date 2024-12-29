@@ -17,6 +17,7 @@ type Props = {
   setChecked?: React.Dispatch<React.SetStateAction<{ [x: string]: boolean }>>;
   shareChecked?: () => void;
   hideChecked?: () => void;
+  shareItem?: (serviceName: string, status: ServiceStatus) => void;
   startMaximixed?: "true" | "false";
   statuses?: ServicesHealth["components"];
   prevStatuses?: ServicesHealth["components"];
@@ -49,6 +50,7 @@ function DisplayStatuses({
   shareChecked,
   hideChecked,
   timestamp,
+  shareItem,
   checked = {},
   prevStatuses = {},
 }: Props) {
@@ -134,6 +136,7 @@ function DisplayStatuses({
                   setChecked={setChecked}
                   lastStatus={prevStatuses[serviceName]}
                   lastStatusTimestamp={timestamp}
+                  shareItem={shareItem}
                 />
               );
             })}

@@ -25,6 +25,27 @@ function ItemizedStatus({ filterBy }: Props) {
     setChecked({});
   };
 
+  const shareSingleItem = (svcName: string, svcStatus: ServiceStatus) => {
+    if (currentStatus === null)
+      return toast({
+        title: "Unable to determine current status",
+        variant: "destructive",
+      });
+
+    const components = [{ [svcName]: svcStatus }];
+
+    const querystring = new URLSearchParams();
+    const status = currentStatus.status;
+    querystring.append("status", status);
+    querystring.append("components", JSON.stringify(components));
+    querystring.append("timestamp", String(timestamp));
+
+    const url = `${window.location.origin}/health?${querystring}`;
+    navigator.clipboard.writeText(url);
+
+    setChecked({});
+    toast({ title: "Copied link to clipboard" });
+  };
   const shareChecked = () => {
     const itemsToShare = Object.keys(checked);
 
@@ -58,6 +79,7 @@ function ItemizedStatus({ filterBy }: Props) {
       setChecked={setChecked}
       shareChecked={shareChecked}
       hideChecked={hideChecked}
+      shareItem={shareSingleItem}
       startMaximixed={startMaximixed}
       statuses={currentStatus.components}
       prevStatuses={previousStatus ? previousStatus.data.components : undefined}

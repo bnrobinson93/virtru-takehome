@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { statusColorBg } from "@/lib/statusColor";
 import { cn } from "@/lib/utils";
-import HideItem from "./HideItem";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   AccordionContent,
@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Share2 } from "lucide-react";
+import HideItem from "./HideItem";
 
 type Props = {
   serviceName: string;
@@ -17,6 +18,7 @@ type Props = {
   setChecked?: React.Dispatch<React.SetStateAction<{ [K in string]: boolean }>>;
   lastStatus?: ServiceStatus;
   lastStatusTimestamp?: string;
+  shareItem: (serviceName: string, status: ServiceStatus) => void;
 };
 
 function MoreDetail(
@@ -76,6 +78,7 @@ function ListItem({
   setChecked,
   lastStatus,
   lastStatusTimestamp,
+  shareItem,
 }: Props) {
   const color = statusColorBg(status.status);
 
@@ -126,7 +129,11 @@ function ListItem({
         </div>
 
         <div className="flex items-center gap-1">
-          <Button variant="link" className="font-semibold text-primary-300">
+          <Button
+            variant="link"
+            className="font-semibold text-primary-300"
+            onClick={() => shareItem(serviceName, status)}
+          >
             <Share2 />
             Share
           </Button>
