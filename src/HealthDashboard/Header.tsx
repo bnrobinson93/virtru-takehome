@@ -20,11 +20,6 @@ function Header({ pause, resume, paused, filterBy, setFilterBy }: Props) {
   const buttonText = paused ? "Resume Updates" : "Pause Updates";
   const Icon = paused ? <Play size={24} /> : <Pause size={24} />;
 
-  const updateFilter = (filterBy: string) => {
-    console.log("[HEADER] Updating filter to", filterBy);
-    setFilterBy(filterBy);
-  };
-
   return (
     <header
       className={cn(
@@ -54,7 +49,7 @@ function Header({ pause, resume, paused, filterBy, setFilterBy }: Props) {
               <span className="-ml-1 hidden sm:inline-block">Filter</span>
             </Button>
           </DropdownMenuTrigger>
-          <FilterMenu filterBy={filterBy} setFilterBy={updateFilter} />
+          <FilterMenu filterBy={filterBy} setFilterBy={setFilterBy} />
         </DropdownMenu>
       </nav>
     </header>
