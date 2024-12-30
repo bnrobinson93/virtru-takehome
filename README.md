@@ -165,7 +165,7 @@ Note that links to each library can be found in the [Resources](#resources) sect
   - Additionally, there will be checkboxes next to each entry to allow user to mass-hide/show the entries
   - Any hidden entries will be moved to a collapse section at the bottom of the page for restoration. There will be a "Restore all" button inside the collapse for ease of use.
   - A "Filter by status" drop-down will be available. This will be a radio list
-  - A text filter will be at the top for manual filtering
+  - ~~A text filter will be at the top for manual filtering.~~ **Note** while desigining, it seemed that this would not provide much value to the user. While not hard to implment, I've opted to leave this out for now.
 - Sharing
   - The primary modes of sharing that could be used here are via file or via a link. From a user perspective, a link is far more sharable, so that will be used.
   - Each entry will also have a "Share" button next it to allow the user to share a link with the status of the service at a point-in-time
